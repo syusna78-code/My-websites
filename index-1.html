@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boutique Shop</title>
+<link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="#top" id="brand">Your Boutique</a>
+  <nav aria-label="Main"><a href="#catalogue">Catalogue</a><a href="#info">Info</a>
+    <button class="btn btn-ghost" id="open-cart" type="button">Cart <span class="count" id="cart-count">0</span></button></nav>
+</header>
+<main id="top">
+  <section class="hero" id="hero" aria-labelledby="tagline">
+    <div class="hero-inner"><div class="hero-panel"><h1 id="tagline"></h1>
+    <p>Browse the collection, pick your size and colour, then send an order or a question on WhatsApp.</p>
+    <a class="btn btn-light" href="#catalogue">Browse the collection</a></div></div>
+  </section>
+  <section class="wrap" id="catalogue" aria-labelledby="cat-h"><h2 id="cat-h">The collection</h2>
+    <div class="grid" id="grid"></div><p class="empty" id="no-products" hidden>No products are available right now.</p></section>
+  <section class="wrap" id="info" aria-labelledby="info-h"><h2 id="info-h">Good to know</h2><div class="info" id="info-list"></div></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p id="f-contact"></p><p id="f-policies"></p>
+  <p>Orders are confirmed on WhatsApp only after you send the message and the shop replies.</p></div>
+</footer>
+
+<dialog id="product-dialog" aria-labelledby="pd-title"><div class="sheet">
+  <button class="btn btn-ghost close" type="button" data-close>Close</button>
+  <img id="pd-img" class="pd-img" alt="">
+  <h2 id="pd-title"></h2><p class="price" id="pd-price"></p><p id="pd-desc"></p>
+  <fieldset><legend>Size</legend><div class="opts" id="pd-sizes"></div></fieldset>
+  <fieldset><legend>Colour</legend><div class="opts" id="pd-colours"></div></fieldset>
+  <label for="pd-qty">Quantity</label>
+  <input id="pd-qty" inputmode="numeric" value="1" autocomplete="off">
+  <p class="hint" id="pd-stock" role="status"></p>
+  <p class="error" id="pd-error" role="alert"></p>
+  <button class="btn btn-primary" id="pd-add" type="button">Add to cart</button>
+  <button class="btn btn-secondary" id="pd-enquire" type="button">Ask about this product on WhatsApp</button>
+  <p class="hint">The enquiry opens WhatsApp with a message you can edit. It does not add to your cart or place an order.</p>
+</div></dialog>
+
+<dialog id="cart-dialog" aria-labelledby="cart-title"><div class="sheet">
+  <button class="btn btn-ghost close" type="button" data-close>Close</button>
+  <h2 id="cart-title">Your cart</h2>
+  <p class="empty" id="cart-empty">Your cart is empty. Pick something you like from the collection.</p>
+  <div id="cart-lines"></div>
+  <p class="notice" id="cart-notice" role="status"></p>
+  <div id="cart-summary" hidden>
+    <p class="total"><span>Subtotal</span><strong id="subtotal"></strong></p>
+    <p class="hint">Delivery fee and final availability are confirmed by the seller.</p>
+    <h3>Your details (optional)</h3>
+    <p class="hint">The shop uses these only to prepare your order. They are not saved on this device.</p>
+    <label for="c-name">Name</label><input id="c-name" autocomplete="name" maxlength="60"><p class="error" id="e-name" role="alert"></p>
+    <label for="c-phone">Phone</label><input id="c-phone" inputmode="tel" autocomplete="tel" maxlength="20"><p class="error" id="e-phone" role="alert"></p>
+    <label for="c-address">Delivery address</label><textarea id="c-address" rows="3" maxlength="300" autocomplete="street-address"></textarea><p class="error" id="e-address" role="alert"></p>
+    <p class="error" id="wa-error" role="alert"></p>
+    <button class="btn btn-primary" id="order-btn" type="button">Order on WhatsApp</button>
+    <p class="hint">WhatsApp opens with your message ready. Nothing is sent until you press Send there. Your order is not confirmed until the shop replies.</p>
+    <button class="btn btn-ghost" id="clear-cart" type="button">Clear cart</button>
+  </div>
+</div></dialog>
+
+<script src="config.js?v=3"></script>
+<script src="products.js?v=3"></script>
+<script src="cart.js?v=3"></script>
+<script src="whatsapp.js?v=3"></script>
+<script src="app.js?v=3"></script>
+<script>
+  // Shows a clear message if the js folder was not uploaded or its path is wrong.
+  if (typeof shopConfig === "undefined" || typeof products === "undefined" || typeof Cart === "undefined" || typeof WhatsApp === "undefined") {
+    document.getElementById("tagline").textContent = "The shop scripts did not load";
+    document.getElementById("no-products").hidden = false;
+    document.getElementById("no-products").textContent = "Upload the whole js folder (config.js, products.js, cart.js, whatsapp.js, app.js) next to index.html, then refresh.";
+  }
+</script>
+</body>
+</html>
