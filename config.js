@@ -4,7 +4,7 @@ const shopConfig = {
   tagline: "Everyday outfits, chosen with care", // placeholder
   heroImage: "hero-sample.svg", // sample art; replace with an owner-approved photo
   logo: "",                                  // optional, e.g. "assets/logo.png"
-  whatsappNumber: "91XXXXXXXXXX",            // country code + number, digits only
+  whatsappNumber: "919391776643",            // country code + number, digits only
   currency: "INR",
   contact: "Contact details: add the owner's verified details here.",
   info: [ // verified details only; replace the placeholders
