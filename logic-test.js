@@ -1,0 +1,27 @@
+// Run: node tests/logic-test.js   (checks cart + WhatsApp logic without a browser)
+const fs = require("fs"), vm = require("vm"), assert = require("assert");
+const store = {}; const ctx = { localStorage: { getItem: k => store[k] ?? null, setItem: (k, v) => { store[k] = v; } }, console };
+vm.createContext(ctx);
+const load = f => vm.runInContext(fs.readFileSync(__dirname + "/../js/" + f, "utf8") + "\n;", ctx);
+["config.js", "products.js"].forEach(load);
+vm.runInContext("this.shopConfig=shopConfig;this.products=products;", ctx);
+load("cart.js"); load("whatsapp.js");
+vm.runInContext("this.Cart=Cart;this.WhatsApp=WhatsApp;", ctx);
+const { Cart, WhatsApp, shopConfig } = ctx; let n = 0; const t = (name, fn) => { fn(); n++; console.log("ok -", name); };
+t("rejects invalid qty", () => [0, -1, 1.5, NaN].forEach(q => assert(!Cart.add("outfit-001", "S", "Beige", q).ok)));
+t("blocks unavailable variant", () => assert(!Cart.add("outfit-001", "S", "Brown", 1).ok));
+t("blocks inactive product", () => assert(!Cart.add("outfit-004", "S", "Beige", 1).ok));
+t("stock boundary", () => { assert(Cart.add("outfit-001", "S", "Beige", 3).ok); assert(!Cart.add("outfit-001", "S", "Beige", 1).ok); });
+t("different variant = separate line", () => { Cart.add("outfit-001", "M", "Beige", 1); assert.equal(Cart.resolve().lines.length, 2); });
+t("totals", () => assert.equal(Cart.resolve().subtotalPaise, 79900 * 4));
+t("setQty limits", () => { assert(!Cart.setQty(0, 4)); assert(Cart.setQty(0, 2)); assert.equal(Cart.resolve().subtotalPaise, 79900 * 3); });
+t("remove", () => { Cart.remove(1); assert.equal(Cart.resolve().count, 2); });
+t("malformed storage", () => { store["boutique-cart-v1"] = "{bad"; assert.doesNotThrow(() => Cart.resolve()); });
+t("invalid number blocks both links", () => { assert(WhatsApp.build(Cart.resolve(), {}).error); assert(WhatsApp.enquiry(ctx.products[0]).error); });
+shopConfig.whatsappNumber = "919876543210";
+t("enquiry without variant", () => { const r = WhatsApp.enquiry(ctx.products[0]); assert(r.url.startsWith("https://wa.me/919876543210?text=")); assert(!r.text.includes("Selected")); assert(r.text.includes("OUT-001")); });
+t("enquiry with variant, cart untouched", () => { Cart.clear(); const r = WhatsApp.enquiry(ctx.products[0], "M", "Beige"); assert(r.text.includes("Size M, Colour Beige")); assert.equal(Cart.resolve().count, 0); });
+t("order message + encoding", () => { ctx.products[1].name = "Tom & Jerry's Kurti"; Cart.add("outfit-002", "M", "Tan", 2);
+  const r = WhatsApp.build(Cart.resolve(), { name: "Asha" }); assert(r.url.includes("Tom%20%26%20Jerry")); const m = decodeURIComponent(r.url.split("text=")[1]);
+  assert(m.includes("Subtotal: ₹2,998") && m.includes("Size: M | Colour: Tan") && m.includes("confirmed by seller")); });
+console.log(n + " tests passed");
