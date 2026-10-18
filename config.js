@@ -2,7 +2,7 @@
 const shopConfig = {
   shopName: "YOUR BOUTIQUE",                 // public business name
   tagline: "Everyday outfits, chosen with care", // placeholder
-  heroImage: "assets/images/hero-fashion.jpg", // owner-approved photo; a burgundy fallback shows if missing
+  heroImage: "hero-sample.svg", // sample art; replace with an owner-approved photo
   logo: "",                                  // optional, e.g. "assets/logo.png"
   whatsappNumber: "91XXXXXXXXXX",            // country code + number, digits only
   currency: "INR",

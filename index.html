@@ -14,9 +14,9 @@
 </header>
 <main id="top">
   <section class="hero" id="hero" aria-labelledby="tagline">
-    <div class="hero-inner"><h1 id="tagline"></h1>
+    <div class="hero-inner"><div class="hero-panel"><h1 id="tagline"></h1>
     <p>Browse the collection, pick your size and colour, then send an order or a question on WhatsApp.</p>
-    <a class="btn btn-light" href="#catalogue">Browse the collection</a></div>
+    <a class="btn btn-light" href="#catalogue">Browse the collection</a></div></div>
   </section>
   <section class="wrap" id="catalogue" aria-labelledby="cat-h"><h2 id="cat-h">The collection</h2>
     <div class="grid" id="grid"></div><p class="empty" id="no-products" hidden>No products are available right now.</p></section>
@@ -63,10 +63,18 @@
   </div>
 </div></dialog>
 
-<script src="js/config.js"></script>
-<script src="js/products.js"></script>
-<script src="js/cart.js"></script>
-<script src="js/whatsapp.js"></script>
-<script src="js/app.js"></script>
+<script src="config.js"></script>
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script src="whatsapp.js"></script>
+<script src="app.js"></script>
+<script>
+  // Shows a clear message if the js folder was not uploaded or its path is wrong.
+  if (typeof shopConfig === "undefined" || typeof products === "undefined" || typeof Cart === "undefined" || typeof WhatsApp === "undefined") {
+    document.getElementById("tagline").textContent = "The shop scripts did not load";
+    document.getElementById("no-products").hidden = false;
+    document.getElementById("no-products").textContent = "Upload the whole js folder (config.js, products.js, cart.js, whatsapp.js, app.js) next to index.html, then refresh.";
+  }
+</script>
 </body>
 </html>
